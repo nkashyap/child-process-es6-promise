@@ -1,0 +1,37 @@
+{
+  "name": "child-process-es6-promise",
+  "version": "1.0.0",
+  "description": "ES6 promise wrapper around child-process",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint index.js test.js",
+    "pretest": "npm run lint",
+    "test": "mocha --reporter spec"
+  },
+  "keywords": [
+    "child-process",
+    "ES6",
+    "promise"
+  ],
+  "author": {
+    "name": "Nisheeth Kashyap",
+    "email": "nisheeth.k.kashyap@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nkashyap/child-process-es6-promise.git"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/nkashyap/child-process-es6-promise/issues"
+  },
+  "homepage": "https://github.com/nkashyap/child-process-es6-promise#readme",
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "mocha": "^2.4.5"
+  },
+  "engines": {
+    "node": ">4.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "env": {
+    "node": true,
+    "mocha": true,
+    "commonjs": true,
+    "es6": true
+  }
+}
