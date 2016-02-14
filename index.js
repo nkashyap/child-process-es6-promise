@@ -14,8 +14,11 @@ class ChildProcess {
         let promise = new Promise((resolve, reject) => {
             child = this.child_process
                 .exec(command, options, (error, stdout, stderr) => {
-                    if (error !== null) return reject({error: error, message: stderr});
-                    resolve({data: stdout});
+                    if (error) {
+                        error.stderr = stderr;
+                        return reject(error);
+                    }
+                    resolve({stdout: stdout});
                 });
         });
         promise.child = child;
@@ -27,8 +30,11 @@ class ChildProcess {
         let promise = new Promise((resolve, reject) => {
             child = this.child_process
                 .execFile(file, args, options, (error, stdout, stderr) => {
-                    if (error !== null) return reject({error: error, message: stderr});
-                    resolve({data: stdout});
+                    if (error) {
+                        error.stderr = stderr;
+                        return reject(error);
+                    }
+                    resolve({stdout: stdout});
                 });
         });
         promise.child = child;
@@ -43,10 +49,11 @@ class ChildProcess {
             child = this.child_process
                 .fork(modulePath, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, data: stdout});
+                    resolve({code: code, signal: signal, stdout: stdout});
                 })
                 .on('error', (error) => {
-                    reject({error: error, message: stderr});
+                    error.stderr = stderr;
+                    reject(error);
                 });
 
             child.stdout
@@ -72,10 +79,11 @@ class ChildProcess {
             child = this.child_process
                 .spawn(command, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, data: stdout});
+                    resolve({code: code, signal: signal, stdout: stdout});
                 })
                 .on('error', (error) => {
-                    reject({error: error, message: stderr});
+                    error.stderr = stderr;
+                    reject(error);
                 });
 
             child.stdout
@@ -98,9 +106,10 @@ class ChildProcess {
         options.encoding = 'utf8';
         return (new Promise((resolve, reject) => {
             try {
-                resolve({data: this.child_process.execSync(command, options)});
-            } catch (e) {
-                reject({error: e, message: e.stderr});
+                resolve({stdout: this.child_process.execSync(command, options)});
+            } catch (error) {
+                error.code = error.status;
+                reject(error);
             }
         }));
     }
@@ -110,9 +119,9 @@ class ChildProcess {
         options.encoding = 'utf8';
         return (new Promise((resolve, reject) => {
             try {
-                resolve({data: this.child_process.execFileSync(file, args, options)});
-            } catch (e) {
-                reject({error: e, message: e.stderr});
+                resolve({stdout: this.child_process.execFileSync(file, args, options).toString()});
+            } catch (error) {
+                reject(error);
             }
         }));
     }
@@ -122,8 +131,11 @@ class ChildProcess {
         options.encoding = 'utf8';
         return (new Promise((resolve, reject) => {
             let result = this.child_process.spawnSync(command, args, options);
-            if (result.error !== null) return reject({error: result.error, message: result.stderr});
-            resolve({code: result.status, signal: result.signal, data: result.stdout});
+            if (result.error) {
+                result.error.stderr = result.stderr;
+                return reject(result.error);
+            }
+            resolve({code: result.status, signal: result.signal, stdout: result.stdout});
         }));
     }
 }
