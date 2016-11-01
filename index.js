@@ -142,7 +142,7 @@ class ChildProcess {
             child = this.child_process
                 .spawn(command, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, stdout: stdout});
+                    resolve({code: code, signal: signal, stdout: stdout, stderr: stderr});
                 })
                 .on('error', (error) => {
                     error.stderr = stderr;
