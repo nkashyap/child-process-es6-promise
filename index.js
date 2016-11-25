@@ -99,9 +99,19 @@ class ChildProcess {
             child = this.child_process
                 .fork(modulePath, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, stdout: stdout});
+                    if (code !== 0) {
+                        const error = new Error('Exited with code ' + code);
+                        error.code = code;
+                        error.stderr = stderr;
+                        error.stdout = stdout;
+                        error.signal = signal;
+                        reject(error);
+                    } else {
+                        resolve({code: code, signal: signal, stdout: stdout});
+                    }
                 })
                 .on('error', (error) => {
+                    error.stdout = stdout;
                     error.stderr = stderr;
                     reject(error);
                 });
@@ -146,9 +156,19 @@ class ChildProcess {
             child = this.child_process
                 .spawn(command, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, stdout: stdout});
+                    if (code !== 0) {
+                        const error = new Error('Exited with code ' + code);
+                        error.code = code;
+                        error.stderr = stderr;
+                        error.stdout = stdout;
+                        error.signal = signal;
+                        reject(error);
+                    } else {
+                        resolve({code: code, signal: signal, stdout: stdout});
+                    }
                 })
                 .on('error', (error) => {
+                    error.stdout = stdout;
                     error.stderr = stderr;
                     reject(error);
                 });
