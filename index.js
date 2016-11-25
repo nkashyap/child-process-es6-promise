@@ -13,6 +13,7 @@ class ChildProcess {
 
     constructor() {
         this.child_process = require('child_process');
+        Object.getOwnPropertyNames(this.constructor.prototype).forEach(method => this[method] = this[method].bind(this));
     }
 
     /**

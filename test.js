@@ -74,6 +74,13 @@ describe('child-process-es6-promise', () => {
         });
     });
 
+    describe('const {spawn} = cp', () => {
+        it('should work without parent instance', () => {
+            const {spawn} = cp;
+            return spawn('echo test', shell);
+        });
+    });
+
     //describe('execSync()', () => {
     //    it('should execute command with correct arguments', (done) => {
     //        cp.execSync('echo test')
