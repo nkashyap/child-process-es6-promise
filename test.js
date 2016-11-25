@@ -73,6 +73,10 @@ describe('child-process-es6-promise', () => {
                     done();
                 });
         });
+        it('should not throw when {stdio: inherit}', (done) => {
+            cp.spawn('echo', ['test'], {stdio: 'inherit', shell: true})
+                .then(()=> done()).catch(done);
+        });
     });
 
     //describe('execSync()', () => {

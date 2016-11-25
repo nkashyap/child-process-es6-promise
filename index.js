@@ -106,16 +106,20 @@ class ChildProcess {
                     reject(error);
                 });
 
-            child.stdout
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stdout += data;
-                });
-            child.stderr
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stderr += data;
-                });
+            if (child.stdout) {
+                child.stdout
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stdout += data;
+                    });
+            }
+            if (child.stderr) {
+                child.stderr
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stderr += data;
+                    });
+            }
         });
         promise.child = child;
         return promise;
@@ -149,16 +153,20 @@ class ChildProcess {
                     reject(error);
                 });
 
-            child.stdout
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stdout += data;
-                });
-            child.stderr
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stderr += data;
-                });
+            if (child.stdout) {
+                child.stdout
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stdout += data;
+                    });
+            }
+            if (child.stderr) {
+                child.stderr
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stderr += data;
+                    });
+            }
         });
         promise.child = child;
         return promise;
