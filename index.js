@@ -13,6 +13,7 @@ class ChildProcess {
 
     constructor() {
         this.child_process = require('child_process');
+        Object.getOwnPropertyNames(this.constructor.prototype).forEach(method => this[method] = this[method].bind(this));
     }
 
     /**
@@ -99,23 +100,37 @@ class ChildProcess {
             child = this.child_process
                 .fork(modulePath, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, stdout: stdout});
+                    if (code !== 0) {
+                        const error = new Error('Exited with code ' + code);
+                        error.code = code;
+                        error.stderr = stderr;
+                        error.stdout = stdout;
+                        error.signal = signal;
+                        reject(error);
+                    } else {
+                        resolve({code: code, signal: signal, stdout: stdout});
+                    }
                 })
                 .on('error', (error) => {
+                    error.stdout = stdout;
                     error.stderr = stderr;
                     reject(error);
                 });
 
-            child.stdout
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stdout += data;
-                });
-            child.stderr
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stderr += data;
-                });
+            if (child.stdout) {
+                child.stdout
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stdout += data;
+                    });
+            }
+            if (child.stderr) {
+                child.stderr
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stderr += data;
+                    });
+            }
         });
         promise.child = child;
         return promise;
@@ -142,23 +157,37 @@ class ChildProcess {
             child = this.child_process
                 .spawn(command, args, options)
                 .on('close', (code, signal) => {
-                    resolve({code: code, signal: signal, stdout: stdout});
+                    if (code !== 0) {
+                        const error = new Error('Exited with code ' + code);
+                        error.code = code;
+                        error.stderr = stderr;
+                        error.stdout = stdout;
+                        error.signal = signal;
+                        reject(error);
+                    } else {
+                        resolve({code: code, signal: signal, stdout: stdout});
+                    }
                 })
                 .on('error', (error) => {
+                    error.stdout = stdout;
                     error.stderr = stderr;
                     reject(error);
                 });
 
-            child.stdout
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stdout += data;
-                });
-            child.stderr
-                .setEncoding('utf8')
-                .on('data', (data) => {
-                    stderr += data;
-                });
+            if (child.stdout) {
+                child.stdout
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stdout += data;
+                    });
+            }
+            if (child.stderr) {
+                child.stderr
+                    .setEncoding('utf8')
+                    .on('data', (data) => {
+                        stderr += data;
+                    });
+            }
         });
         promise.child = child;
         return promise;
