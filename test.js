@@ -72,6 +72,16 @@ describe('child-process-es6-promise', () => {
         it('should not throw when {stdio: inherit}', () => {
             return cp.spawn('echo', ['test'], {stdio: 'inherit', shell: true})
         });
+        it('should return a buffer with { binary: true }', () => {
+            return cp.spawn('printf', ['"\\x7f\\x50"'], {binary: true, shell: true})
+                .then((result)=> {
+                    assert.equal(result.code, 0);
+                    assert.equal(result.signal, null);
+                    assert(result.stdout instanceof Buffer);
+                    assert(result.stdout[0] === 0x7f);
+                    assert(result.stdout[1] === 0x50);
+                });
+        });
     });
 
     describe('const {spawn} = cp', () => {

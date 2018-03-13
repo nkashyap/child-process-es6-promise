@@ -154,16 +154,22 @@ class ChildProcess {
    * @param {boolean} options.detached - Prepare child to run independently of its parent process. Specific behavior depends on the platform, see options.detached)
    * @param {number} options.uid - Sets the user identity of the process.
    * @param {number} options.gid - Sets the group identity of the process.
+   * @param {boolean} options.binary - Buffer stdio as binary data.
    * @return {Promise} A Promise object.
    */
   spawn(command, args, options) {
     let child;
     let promise = new Promise((resolve, reject) => {
-      let stdout = '';
-      let stderr = '';
+      let stdout = Buffer.alloc(0);
+      let stderr = Buffer.alloc(0);
       child = this.child_process
                   .spawn(command, args, options)
                   .on('close', (code, signal) => {
+                    const { binary } = options || {};
+                    if (!binary) {
+                      stdout = stdout.toString('utf8');
+                      stderr = stderr.toString('utf8');
+                    }
                     if (code !== 0) {
                       const error = new Error('Exited with code ' + code);
                       error.code = code;
@@ -188,16 +194,14 @@ class ChildProcess {
 
       if (child.stdout) {
         child.stdout
-             .setEncoding('utf8')
              .on('data', (data) => {
-               stdout += data;
+               stdout = Buffer.concat([stdout, data]);
              });
       }
       if (child.stderr) {
         child.stderr
-             .setEncoding('utf8')
              .on('data', (data) => {
-               stderr += data;
+               stderr = Buffer.concat([stderr, data]);
              });
       }
     });
