@@ -39,6 +39,7 @@ class ChildProcess {
       child = this.child_process
                   .exec(command, options, (error, stdout, stderr) => {
                     if (error) {
+                      error.stdout = stdout;
                       error.stderr = stderr;
                       return reject(error);
                     }
@@ -70,6 +71,7 @@ class ChildProcess {
       child = this.child_process
                   .execFile(file, args, options, (error, stdout, stderr) => {
                     if (error) {
+                      error.stdout = stdout;
                       error.stderr = stderr;
                       return reject(error);
                     }
