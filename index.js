@@ -43,7 +43,7 @@ class ChildProcess {
                       error.stderr = stderr;
                       return reject(error);
                     }
-                    resolve({ stdout: stdout });
+                    resolve({ stdout: stdout, stderr: stderr });
                   });
     });
     promise.child = child;
@@ -75,7 +75,7 @@ class ChildProcess {
                       error.stderr = stderr;
                       return reject(error);
                     }
-                    resolve({ stdout: stdout });
+                    resolve({ stdout: stdout, stderr: stderr });
                   });
     });
     promise.child = child;
