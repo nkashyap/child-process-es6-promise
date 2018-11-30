@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/nkashyap/child-process-es6-promise#readme",
   "devDependencies": {
-    "eslint": "^1.10.3",
-    "mocha": "^2.4.5"
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0"
   },
   "engines": {
     "node": ">4.0.0"
