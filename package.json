@@ -29,7 +29,7 @@
   "homepage": "https://github.com/nkashyap/child-process-es6-promise#readme",
   "devDependencies": {
     "eslint": "^6.6.0",
-    "mocha": "^6.2.2"
+    "mocha": "^10.2.0"
   },
   "engines": {
     "node": ">4.0.0"
